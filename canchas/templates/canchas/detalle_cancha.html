@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ cancha.nombre }} - Gol Master{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow border-0 overflow-hidden">
+            {% if cancha.imagen %}
+                <img src="{{ cancha.imagen.url }}" class="img-fluid w-100" style="max-height: 350px; object-fit: cover;" alt="{{ cancha.nombre }}">
+            {% endif %}
+            <div class="card-body p-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <span class="badge bg-warning text-dark fs-6">{{ cancha.disciplina.nombre }}</span>
+                    <span class="badge bg-dark fs-6">{{ cancha.codigo }}</span>
+                </div>
+                <h2 class="fw-bold">{{ cancha.nombre }}</h2>
+                <hr>
+                <div class="row my-3">
+                    <div class="col-md-6 mb-2">
+                        <strong>Superficie:</strong> {{ cancha.superficie }}
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <strong>Tarifa por Bloque:</strong> <span class="text-success fw-bold">${{ cancha.tarifa_bloque|floatformat:0 }}</span>
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <strong>Estado Operativo:</strong> <span class="badge bg-info text-dark">{{ cancha.get_estado_display }}</span>
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <strong>Vigencia:</strong> {% if cancha.activo %}<span class="text-success">Activa</span>{% else %}<span class="text-danger">Inactiva</span>{% endif %}
+                    </div>
+                </div>
+                <div class="d-flex justify-content-between mt-4">
+                    <a href="{% url 'canchas:catalogo' %}" class="btn btn-secondary"><i class="bi bi-arrow-left me-1"></i>Volver al Catálogo</a>
+                    <div>
+                        <a href="{% url 'canchas:editar_cancha' cancha.pk %}" class="btn btn-warning me-2"><i class="bi bi-pencil me-1"></i>Editar</a>
+                        <a href="{% url 'canchas:eliminar_cancha' cancha.pk %}" class="btn btn-danger"><i class="bi bi-trash me-1"></i>Eliminar</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ titulo }} - Gol Master{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow border-0">
+            <div class="card-header bg-dark text-white fw-bold py-3">
+                <i class="bi bi-pencil-square me-2"></i>{{ titulo }}
+            </div>
+            <div class="card-body p-4">
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <div class="d-flex justify-content-between mt-4">
+                        <a href="{% url 'canchas:catalogo' %}" class="btn btn-secondary">Cancelar</a>
+                        <button type="submit" class="btn btn-success fw-semibold">Guardar Cambios</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
