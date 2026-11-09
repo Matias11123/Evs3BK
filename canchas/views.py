@@ -77,3 +77,48 @@ def eliminar_cancha(request, pk):
         messages.warning(request, '¡La cancha ha sido dada de baja lógicamente del sistema!')
         return redirect('canchas:catalogo')
     return render(request, 'canchas/cancha_confirm_delete.html', {'cancha': cancha})
+
+# MÓDULO 4: Gestión de Carrito y Reservas por Sesión (request.session)
+
+def ver_carrito(request):
+    """Muestra los elementos acumulados en el carrito de la sesión actual."""
+    carrito = request.session.get('carrito', {})
+    total_general = sum(item['subtotal'] for item in carrito.values())
+    return render(request, 'canchas/carrito.html', {
+        'carrito': carrito,
+        'total_general': total_general
+    })
+
+def agregar_al_carrito(request, pk):
+    """Agrega una cancha y su bloque a la sesión del usuario."""
+    cancha = get_object_or_404(Cancha, pk=pk)
+    
+    # Inicializar la estructura del carrito en la sesión si no existe
+    carrito = request.session.get('carrito', {})
+    
+    # Usamos el ID de la cancha como clave del diccionario del carrito
+    cancha_id = str(pk)
+    
+    if cancha_id in carrito:
+        carrito[cancha_id]['cantidad'] += 1
+        carrito[cancha_id]['subtotal'] = carrito[cancha_id]['cantidad'] * float(cancha.tarifa_bloque)
+    else:
+        carrito[cancha_id] = {
+            'nombre': cancha.nombre,
+            'codigo': cancha.codigo,
+            'tarifa': float(cancha.tarifa_bloque),
+            'cantidad': 1,
+            'subtotal': float(cancha.tarifa_bloque)
+        }
+        
+    request.session['carrito'] = carrito
+    request.session.modified = True
+    messages.success(request, f'¡La cancha "{cancha.nombre}" se agregó al carrito de reservas!')
+    return redirect('canchas:ver_carrito')
+
+def limpiar_carrito(request):
+    """Vacía por completo el carrito de la sesión."""
+    if 'carrito' in request.session:
+        del request.session['carrito']
+        messages.info(request, 'El carrito de reservas ha sido vaciado.')
+    return redirect('canchas:ver_carrito')

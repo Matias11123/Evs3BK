@@ -35,6 +35,7 @@
                     <div>
                         <a href="{% url 'canchas:editar_cancha' cancha.pk %}" class="btn btn-warning me-2"><i class="bi bi-pencil me-1"></i>Editar</a>
                         <a href="{% url 'canchas:eliminar_cancha' cancha.pk %}" class="btn btn-danger"><i class="bi bi-trash me-1"></i>Eliminar</a>
+                        <a href="{% url 'canchas:agregar_al_carrito' cancha.pk %}" class="btn btn-success"><i class="bi bi-cart-plus me-1"></i> Reservar / Agregar al Carrito</a>
                     </div>
                 </div>
             </div>
